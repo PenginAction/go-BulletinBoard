@@ -19,8 +19,7 @@ OFFSET $3;
 
 -- name: UpdatePost :one
 UPDATE posts
-  set user_id = $2,
-  text = $3
+  set text = $2
 WHERE id = $1
 RETURNING *;
 
