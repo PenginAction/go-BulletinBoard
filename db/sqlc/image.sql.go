@@ -36,7 +36,7 @@ func (q *Queries) CreateImage(ctx context.Context, arg CreateImageParams) (Image
 }
 
 const deleteImage = `-- name: DeleteImage :exec
-DELETE FROM posts
+DELETE FROM images
 WHERE id = $1
 `
 
@@ -106,20 +106,18 @@ func (q *Queries) ListImages(ctx context.Context, arg ListImagesParams) ([]Image
 
 const updateImage = `-- name: UpdateImage :one
 UPDATE images
-  set post_id = $2,
-  image_path = $3
+  set image_path = $2
 WHERE id = $1
 RETURNING id, post_id, image_path, created_at
 `
 
 type UpdateImageParams struct {
 	ID        int64  `json:"id"`
-	PostID    int64  `json:"post_id"`
 	ImagePath string `json:"image_path"`
 }
 
 func (q *Queries) UpdateImage(ctx context.Context, arg UpdateImageParams) (Image, error) {
-	row := q.db.QueryRowContext(ctx, updateImage, arg.ID, arg.PostID, arg.ImagePath)
+	row := q.db.QueryRowContext(ctx, updateImage, arg.ID, arg.ImagePath)
 	var i Image
 	err := row.Scan(
 		&i.ID,

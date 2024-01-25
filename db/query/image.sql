@@ -19,11 +19,10 @@ OFFSET $3;
 
 -- name: UpdateImage :one
 UPDATE images
-  set post_id = $2,
-  image_path = $3
+  set image_path = $2
 WHERE id = $1
 RETURNING *;
 
 -- name: DeleteImage :exec
-DELETE FROM posts
+DELETE FROM images
 WHERE id = $1;
