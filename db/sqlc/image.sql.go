@@ -66,18 +66,20 @@ func (q *Queries) GetImage(ctx context.Context, id int64) (Image, error) {
 
 const listImages = `-- name: ListImages :many
 SELECT id, post_id, image_path, created_at, updated_at FROM images
+WHERE post_id = $1
 ORDER BY post_id
-LIMIT $1
-OFFSET $2
+LIMIT $2
+OFFSET $3
 `
 
 type ListImagesParams struct {
+	PostID int64 `json:"post_id"`
 	Limit  int32 `json:"limit"`
 	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListImages(ctx context.Context, arg ListImagesParams) ([]Image, error) {
-	rows, err := q.db.QueryContext(ctx, listImages, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, listImages, arg.PostID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
