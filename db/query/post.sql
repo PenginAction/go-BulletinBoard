@@ -12,9 +12,10 @@ WHERE id = $1 LIMIT 1;
 
 -- name: ListPosts :many
 SELECT * FROM posts
+WHERE user_id = $1
 ORDER BY user_id
-LIMIT $1
-OFFSET $2;
+LIMIT $2
+OFFSET $3;
 
 -- name: UpdatePost :one
 UPDATE posts
