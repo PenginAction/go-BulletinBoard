@@ -15,7 +15,7 @@ INSERT INTO images (
  image_path
 ) VALUES (
  $1, $2
-) RETURNING id, post_id, image_path, created_at, updated_at
+) RETURNING id, post_id, image_path, created_at
 `
 
 type CreateImageParams struct {
@@ -31,7 +31,6 @@ func (q *Queries) CreateImage(ctx context.Context, arg CreateImageParams) (Image
 		&i.PostID,
 		&i.ImagePath,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -47,7 +46,7 @@ func (q *Queries) DeleteImage(ctx context.Context, id int64) error {
 }
 
 const getImage = `-- name: GetImage :one
-SELECT id, post_id, image_path, created_at, updated_at FROM images
+SELECT id, post_id, image_path, created_at FROM images
 WHERE id = $1 LIMIT 1
 `
 
@@ -59,13 +58,12 @@ func (q *Queries) GetImage(ctx context.Context, id int64) (Image, error) {
 		&i.PostID,
 		&i.ImagePath,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const listImages = `-- name: ListImages :many
-SELECT id, post_id, image_path, created_at, updated_at FROM images
+SELECT id, post_id, image_path, created_at FROM images
 WHERE post_id = $1
 ORDER BY post_id
 LIMIT $2
@@ -92,7 +90,6 @@ func (q *Queries) ListImages(ctx context.Context, arg ListImagesParams) ([]Image
 			&i.PostID,
 			&i.ImagePath,
 			&i.CreatedAt,
-			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -112,7 +109,7 @@ UPDATE images
   set post_id = $2,
   image_path = $3
 WHERE id = $1
-RETURNING id, post_id, image_path, created_at, updated_at
+RETURNING id, post_id, image_path, created_at
 `
 
 type UpdateImageParams struct {
@@ -129,7 +126,6 @@ func (q *Queries) UpdateImage(ctx context.Context, arg UpdateImageParams) (Image
 		&i.PostID,
 		&i.ImagePath,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }

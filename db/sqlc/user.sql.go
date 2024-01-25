@@ -16,7 +16,7 @@ INSERT INTO users (
  password 
 ) VALUES (
  $1, $2, $3
-) RETURNING id, user_str_id, email, password, created_at, updated_at
+) RETURNING id, user_str_id, email, password, created_at
 `
 
 type CreateUserParams struct {
@@ -34,7 +34,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -50,7 +49,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, user_str_id, email, password, created_at, updated_at FROM users
+SELECT id, user_str_id, email, password, created_at FROM users
 WHERE id = $1 LIMIT 1
 `
 
@@ -63,13 +62,12 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, user_str_id, email, password, created_at, updated_at FROM users
+SELECT id, user_str_id, email, password, created_at FROM users
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -95,7 +93,6 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 			&i.Email,
 			&i.Password,
 			&i.CreatedAt,
-			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -116,7 +113,7 @@ UPDATE users
   email = $3,
   password = $4
 WHERE id = $1
-RETURNING id, user_str_id, email, password, created_at, updated_at
+RETURNING id, user_str_id, email, password, created_at
 `
 
 type UpdateUserParams struct {
@@ -140,7 +137,6 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }

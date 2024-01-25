@@ -15,7 +15,7 @@ INSERT INTO posts (
  text
 ) VALUES (
  $1, $2
-) RETURNING id, user_id, text, created_at, updated_at
+) RETURNING id, user_id, text, created_at
 `
 
 type CreatePostParams struct {
@@ -31,7 +31,6 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, e
 		&i.UserID,
 		&i.Text,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -47,7 +46,7 @@ func (q *Queries) DeletePost(ctx context.Context, id int64) error {
 }
 
 const getPost = `-- name: GetPost :one
-SELECT id, user_id, text, created_at, updated_at FROM posts
+SELECT id, user_id, text, created_at FROM posts
 WHERE id = $1 LIMIT 1
 `
 
@@ -59,13 +58,12 @@ func (q *Queries) GetPost(ctx context.Context, id int64) (Post, error) {
 		&i.UserID,
 		&i.Text,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const listPosts = `-- name: ListPosts :many
-SELECT id, user_id, text, created_at, updated_at FROM posts
+SELECT id, user_id, text, created_at FROM posts
 WHERE user_id = $1
 ORDER BY user_id
 LIMIT $2
@@ -92,7 +90,6 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 			&i.UserID,
 			&i.Text,
 			&i.CreatedAt,
-			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -111,7 +108,7 @@ const updatePost = `-- name: UpdatePost :one
 UPDATE posts
   set text = $2
 WHERE id = $1
-RETURNING id, user_id, text, created_at, updated_at
+RETURNING id, user_id, text, created_at
 `
 
 type UpdatePostParams struct {
@@ -127,7 +124,6 @@ func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, e
 		&i.UserID,
 		&i.Text,
 		&i.CreatedAt,
-		&i.UpdatedAt,
 	)
 	return i, err
 }

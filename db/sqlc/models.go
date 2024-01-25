@@ -13,7 +13,6 @@ type Image struct {
 	PostID    int64     `json:"post_id"`
 	ImagePath string    `json:"image_path"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type Post struct {
@@ -21,7 +20,6 @@ type Post struct {
 	UserID    int64     `json:"user_id"`
 	Text      string    `json:"text"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type User struct {
@@ -30,5 +28,4 @@ type User struct {
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
 }
