@@ -15,9 +15,9 @@ func createRandomUser(t *testing.T) User {
 
 	arg := CreateUserParams{
 		UserStrID: utils.RandomUserStrID(),
-		Email: utils.RandomEmail(),
-		Password: hashedPassword,
-		}
+		Email:     utils.RandomEmail(),
+		Password:  hashedPassword,
+	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
@@ -26,7 +26,7 @@ func createRandomUser(t *testing.T) User {
 	require.Equal(t, arg.UserStrID, user.UserStrID)
 	require.Equal(t, arg.Email, user.Email)
 	require.Equal(t, arg.Password, user.Password)
-	
+
 	require.NotZero(t, user.CreatedAt)
 
 	return user
@@ -49,7 +49,6 @@ func TestGetUser(t *testing.T) {
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 }
 
-
 func TestGetUserByEmail(t *testing.T) {
 	user1 := createRandomUser(t)
 	user2, err := testQueries.GetUserByEmail(context.Background(), user1.Email)
@@ -69,7 +68,7 @@ func TestListUsers(t *testing.T) {
 	}
 
 	arg := ListUsersParams{
-		Limit: 5,
+		Limit:  5,
 		Offset: 5,
 	}
 
@@ -89,10 +88,10 @@ func TestUpdateUser(t *testing.T) {
 	require.NoError(t, err)
 
 	arg := UpdateUserParams{
-		ID: user1.ID,
+		ID:        user1.ID,
 		UserStrID: utils.RandomUserStrID(),
-		Email: utils.RandomEmail(),
-		Password: hashedPassword,
+		Email:     utils.RandomEmail(),
+		Password:  hashedPassword,
 	}
 
 	user2, err := testQueries.UpdateUser(context.Background(), arg)
@@ -107,12 +106,12 @@ func TestUpdateUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-    user1 := createRandomUser(t)
-    err := testQueries.DeleteUser(context.Background(), user1.ID)
-    require.NoError(t, err)
+	user1 := createRandomUser(t)
+	err := testQueries.DeleteUser(context.Background(), user1.ID)
+	require.NoError(t, err)
 
-    user2, err := testQueries.GetUser(context.Background(), user1.ID)
-    require.Error(t, err)
-    require.EqualError(t, err, err.Error()) 
-    require.Empty(t, user2)
+	user2, err := testQueries.GetUser(context.Background(), user1.ID)
+	require.Error(t, err)
+	require.EqualError(t, err, err.Error())
+	require.Empty(t, user2)
 }

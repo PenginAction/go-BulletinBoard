@@ -11,7 +11,7 @@ import (
 
 func CreateRandomImage(t *testing.T, post Post) Image {
 	arg := CreateImageParams{
-		PostID: post.ID,
+		PostID:    post.ID,
 		ImagePath: utils.RandomURL(),
 	}
 
@@ -24,7 +24,7 @@ func CreateRandomImage(t *testing.T, post Post) Image {
 
 	require.NotZero(t, image.ID)
 	require.NotZero(t, image.CreatedAt)
-	
+
 	return image
 }
 
@@ -57,7 +57,7 @@ func TestListImages(t *testing.T) {
 
 	arg := ListImagesParams{
 		PostID: post.ID,
-		Limit: 5,
+		Limit:  5,
 		Offset: 5,
 	}
 
@@ -77,7 +77,7 @@ func TestUpdateImage(t *testing.T) {
 	image1 := CreateRandomImage(t, post)
 
 	arg := UpdateImageParams{
-		ID: image1.ID,
+		ID:        image1.ID,
 		ImagePath: utils.RandomURL(),
 	}
 
@@ -95,11 +95,11 @@ func TestDeleteImage(t *testing.T) {
 	user := createRandomUser(t)
 	post := CreateRandomPost(t, user)
 	image1 := CreateRandomImage(t, post)
-    err := testQueries.DeleteImage(context.Background(), image1.ID)
-    require.NoError(t, err)
+	err := testQueries.DeleteImage(context.Background(), image1.ID)
+	require.NoError(t, err)
 
-    image2, err := testQueries.GetImage(context.Background(), image1.ID)
-    require.Error(t, err)
-    require.EqualError(t, err, err.Error()) 
-    require.Empty(t, image2)
+	image2, err := testQueries.GetImage(context.Background(), image1.ID)
+	require.Error(t, err)
+	require.EqualError(t, err, err.Error())
+	require.Empty(t, image2)
 }

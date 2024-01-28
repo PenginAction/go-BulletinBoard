@@ -12,7 +12,7 @@ import (
 func CreateRandomPost(t *testing.T, user User) Post {
 	arg := CreatePostParams{
 		UserID: user.ID,
-		Text: utils.RandomString(9),
+		Text:   utils.RandomString(9),
 	}
 
 	post, err := testQueries.CreatePost(context.Background(), arg)
@@ -24,7 +24,7 @@ func CreateRandomPost(t *testing.T, user User) Post {
 
 	require.NotZero(t, post.ID)
 	require.NotZero(t, post.CreatedAt)
-	
+
 	return post
 }
 
@@ -54,7 +54,7 @@ func TestListPosts(t *testing.T) {
 
 	arg := ListPostsParams{
 		UserID: user.ID,
-		Limit: 5,
+		Limit:  5,
 		Offset: 5,
 	}
 
@@ -70,10 +70,10 @@ func TestListPosts(t *testing.T) {
 
 func TestUpdatePost(t *testing.T) {
 	user := createRandomUser(t)
-    post1 := CreateRandomPost(t, user)
+	post1 := CreateRandomPost(t, user)
 
 	arg := UpdatePostParams{
-		ID: post1.ID,
+		ID:   post1.ID,
 		Text: utils.RandomString(9),
 	}
 
@@ -88,13 +88,13 @@ func TestUpdatePost(t *testing.T) {
 }
 
 func TestDeletePost(t *testing.T) {
-    user := createRandomUser(t)
-    post1 := CreateRandomPost(t, user)
-    err := testQueries.DeletePost(context.Background(), post1.ID)
-    require.NoError(t, err)
+	user := createRandomUser(t)
+	post1 := CreateRandomPost(t, user)
+	err := testQueries.DeletePost(context.Background(), post1.ID)
+	require.NoError(t, err)
 
-    post2, err := testQueries.GetPost(context.Background(), post1.ID)
-    require.Error(t, err)
-    require.EqualError(t, err, err.Error()) 
-    require.Empty(t, post2)
+	post2, err := testQueries.GetPost(context.Background(), post1.ID)
+	require.Error(t, err)
+	require.EqualError(t, err, err.Error())
+	require.Empty(t, post2)
 }
