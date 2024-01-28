@@ -18,6 +18,7 @@ type Querier interface {
 	GetImage(ctx context.Context, id int64) (Image, error)
 	GetPost(ctx context.Context, id int64) (Post, error)
 	GetUser(ctx context.Context, id int64) (User, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ListImages(ctx context.Context, arg ListImagesParams) ([]Image, error)
 	ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)

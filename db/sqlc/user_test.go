@@ -49,6 +49,20 @@ func TestGetUser(t *testing.T) {
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 }
 
+
+func TestGetUserByEmail(t *testing.T) {
+	user1 := createRandomUser(t)
+	user2, err := testQueries.GetUserByEmail(context.Background(), user1.Email)
+	require.NoError(t, err)
+	require.NotEmpty(t, user2)
+
+	require.Equal(t, user1.UserStrID, user2.UserStrID)
+	require.Equal(t, user1.Email, user2.Email)
+	require.Equal(t, user1.Password, user2.Password)
+
+	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
+}
+
 func TestListUsers(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		createRandomUser(t)
