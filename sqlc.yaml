@@ -10,3 +10,10 @@ sql:
         emit_json_tags: true
         emit_interface: true
         emit_empty_slices: true
+        overrides:
+          - column: "users.id"
+            go_type: "uint"
+          - column: "posts.user_id"
+            go_type: "uint"
+          - column: "posts.id"
+            go_type: "uint"
