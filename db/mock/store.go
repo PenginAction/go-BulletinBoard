@@ -66,7 +66,7 @@ func (mr *MockStoreMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call
 }
 
 // DeletePost mocks base method.
-func (m *MockStore) DeletePost(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeletePost(arg0 context.Context, arg1 uint) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePost", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -80,7 +80,7 @@ func (mr *MockStoreMockRecorder) DeletePost(arg0, arg1 interface{}) *gomock.Call
 }
 
 // DeleteUser mocks base method.
-func (m *MockStore) DeleteUser(arg0 context.Context, arg1 int64) error {
+func (m *MockStore) DeleteUser(arg0 context.Context, arg1 uint) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUser", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -94,7 +94,7 @@ func (mr *MockStoreMockRecorder) DeleteUser(arg0, arg1 interface{}) *gomock.Call
 }
 
 // GetPost mocks base method.
-func (m *MockStore) GetPost(arg0 context.Context, arg1 int64) (db.Post, error) {
+func (m *MockStore) GetPost(arg0 context.Context, arg1 uint) (db.Post, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPost", arg0, arg1)
 	ret0, _ := ret[0].(db.Post)
@@ -109,7 +109,7 @@ func (mr *MockStoreMockRecorder) GetPost(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // GetUser mocks base method.
-func (m *MockStore) GetUser(arg0 context.Context, arg1 int64) (db.User, error) {
+func (m *MockStore) GetUser(arg0 context.Context, arg1 uint) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
 	ret0, _ := ret[0].(db.User)

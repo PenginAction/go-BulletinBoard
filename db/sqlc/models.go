@@ -9,14 +9,14 @@ import (
 )
 
 type Post struct {
-	ID        int64     `json:"id"`
-	UserID    int64     `json:"user_id"`
+	ID        uint      `json:"id"`
+	UserID    uint      `json:"user_id"`
 	Text      string    `json:"text"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
 type User struct {
-	ID        int64     `json:"id"`
+	ID        uint      `json:"id"`
 	UserStrID string    `json:"user_str_id"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`

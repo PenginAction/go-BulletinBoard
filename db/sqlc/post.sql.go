@@ -19,7 +19,7 @@ INSERT INTO posts (
 `
 
 type CreatePostParams struct {
-	UserID int64  `json:"user_id"`
+	UserID uint   `json:"user_id"`
 	Text   string `json:"text"`
 }
 
@@ -40,7 +40,7 @@ DELETE FROM posts
 WHERE id = $1
 `
 
-func (q *Queries) DeletePost(ctx context.Context, id int64) error {
+func (q *Queries) DeletePost(ctx context.Context, id uint) error {
 	_, err := q.db.ExecContext(ctx, deletePost, id)
 	return err
 }
@@ -50,7 +50,7 @@ SELECT id, user_id, text, created_at FROM posts
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetPost(ctx context.Context, id int64) (Post, error) {
+func (q *Queries) GetPost(ctx context.Context, id uint) (Post, error) {
 	row := q.db.QueryRowContext(ctx, getPost, id)
 	var i Post
 	err := row.Scan(
@@ -71,7 +71,7 @@ OFFSET $3
 `
 
 type ListPostsParams struct {
-	UserID int64 `json:"user_id"`
+	UserID uint  `json:"user_id"`
 	Limit  int32 `json:"limit"`
 	Offset int32 `json:"offset"`
 }
@@ -112,7 +112,7 @@ RETURNING id, user_id, text, created_at
 `
 
 type UpdatePostParams struct {
-	ID   int64  `json:"id"`
+	ID   uint   `json:"id"`
 	Text string `json:"text"`
 }
 
