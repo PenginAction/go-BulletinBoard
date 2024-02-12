@@ -8,13 +8,6 @@ import (
 	"time"
 )
 
-type Image struct {
-	ID        int64     `json:"id"`
-	PostID    int64     `json:"post_id"`
-	ImagePath string    `json:"image_path"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
 type Post struct {
 	ID        int64     `json:"id"`
 	UserID    int64     `json:"user_id"`

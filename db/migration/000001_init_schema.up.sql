@@ -13,13 +13,5 @@ CREATE TABLE "posts" (
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE TABLE "images" (
-  "id" bigserial PRIMARY KEY,
-  "post_id" bigint NOT NULL,
-  "image_path" varchar NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
-);
 
 ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "images" ADD FOREIGN KEY ("post_id") REFERENCES "posts" ("id");
