@@ -8,9 +8,8 @@ type CreatePostRequest struct {
 }
 
 type AllPostsRequest struct {
-	UserID uint  `json:"user_id" validate:"required"`
-	Limit  int32 `json:"limit" validate:"required"`
-	Offset int32 `json:"offset" validate:"required"`
+	PageID   int32 `form:"page_id" validate:"required,min=1,max=10"`
+	PageSize int32 `form:"page_size" validate:"required,min=1"`
 }
 
 type UpdatePostRequest struct {

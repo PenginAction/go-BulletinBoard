@@ -72,7 +72,6 @@ func TestGetAllPosts(t *testing.T) {
 	}
 
 	arg := db.ListPostsParams{
-		UserID: user.ID,
 		Limit:  int32(n),
 		Offset: 0,
 	}
@@ -87,9 +86,8 @@ func TestGetAllPosts(t *testing.T) {
 		Return(posts, nil)
 
 	req := dto.AllPostsRequest{
-		UserID: user.ID,
-		Limit:  int32(n),
-		Offset: 0,
+		PageID:   1,
+		PageSize: int32(n),
 	}
 
 	pu := NewPostUsecase(store)

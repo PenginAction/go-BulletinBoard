@@ -53,7 +53,6 @@ func TestListPosts(t *testing.T) {
 	}
 
 	arg := ListPostsParams{
-		UserID: user.ID,
 		Limit:  5,
 		Offset: 5,
 	}
@@ -64,7 +63,6 @@ func TestListPosts(t *testing.T) {
 
 	for _, post := range posts {
 		require.NotEmpty(t, post)
-		require.Equal(t, arg.UserID, post.UserID)
 	}
 }
 

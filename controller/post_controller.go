@@ -79,19 +79,19 @@ func (pc *postController) GetPostById(ctx echo.Context) error {
 }
 
 func (pc *postController) GetAllPosts(ctx echo.Context) error {
-	userValue := ctx.Get("user")
-	if userValue == nil {
-		return ctx.JSON(http.StatusUnauthorized, "Unauthorized")
-	}
-	user := userValue.(*jwt.Token)
-	claims := user.Claims.(*dto.JwtCustomClaims)
-	userId := claims.ID
-
 	var req dto.AllPostsRequest
-	req.UserID = userId
-	if err := ctx.Bind(&req); err != nil {
+
+	pageID, err := strconv.Atoi(ctx.QueryParam("page_id"))
+	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
+	req.PageID = int32(pageID)
+
+	pageSize, err := strconv.Atoi(ctx.QueryParam("page_size"))
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+	req.PageSize = int32(pageSize)
 
 	c := ctx.Request().Context()
 	postRes, err := pc.postUsecase.GetAllPosts(c, req)

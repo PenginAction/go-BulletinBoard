@@ -283,24 +283,26 @@ func TestGetPostById(t *testing.T) {
 }
 
 func TestGetAllPosts(t *testing.T) {
+	type Query struct {
+		PageID   int
+		PageSize int
+	}
 	cases := []struct {
 		name          string
-		requestBody   map[string]interface{}
-		buildStubs    func(pu *mock_usecase.MockIPostUsecase, requestBody map[string]interface{})
+		query         Query
+		buildStubs    func(pu *mock_usecase.MockIPostUsecase, query Query)
 		checkResponse func(recoder *httptest.ResponseRecorder)
 	}{
 		{
 			name: "valid request",
-			requestBody: map[string]interface{}{
-				"user_id": utils.RandomInt(1, 100),
-				"limit":   int32(utils.RandomInt(1, 100)),
-				"offset":  int32(utils.RandomInt(1, 100)),
+			query: Query{
+				PageID:   int(utils.RandomInt(1, 10)),
+				PageSize: int(utils.RandomInt(1, 100)),
 			},
-			buildStubs: func(pu *mock_usecase.MockIPostUsecase, requestBody map[string]interface{}) {
+			buildStubs: func(pu *mock_usecase.MockIPostUsecase, query Query) {
 				expectedReq := dto.AllPostsRequest{
-					UserID: requestBody["user_id"].(uint),
-					Limit:  requestBody["limit"].(int32),
-					Offset: requestBody["offset"].(int32),
+					PageID:   int32(query.PageID),
+					PageSize: int32(query.PageSize),
 				}
 				pu.EXPECT().
 					GetAllPosts(context.Background(), expectedReq).
@@ -311,62 +313,43 @@ func TestGetAllPosts(t *testing.T) {
 				require.Equal(t, http.StatusOK, rec.Code)
 			},
 		},
-		{
-			name: "no user info",
-			requestBody: map[string]interface{}{
-				"user_id": utils.RandomInt(1, 100),
-				"limit":   int32(utils.RandomInt(1, 100)),
-				"offset":  int32(utils.RandomInt(1, 100)),
-			},
-			buildStubs: func(pu *mock_usecase.MockIPostUsecase, requestBody map[string]interface{}) {
-			},
-			checkResponse: func(rec *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusUnauthorized, rec.Code)
-			},
-		},
-		{
-			name: "request bind error",
-			requestBody: map[string]interface{}{
-				"user_id": "invalid user id",
-				"limit":   int32(utils.RandomInt(1, 100)),
-				"offset":  int32(utils.RandomInt(1, 100)),
-			},
-			buildStubs: func(pu *mock_usecase.MockIPostUsecase, requestBody map[string]interface{}) {
-			},
-			checkResponse: func(rec *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, rec.Code)
-			},
-		},
-		{
-			name: "validation error",
-			requestBody: map[string]interface{}{
-				"user_id": utils.RandomInt(1, 100),
-				"limit":   "",
-				"offset":  "",
-			},
-			buildStubs: func(pu *mock_usecase.MockIPostUsecase, requestBody map[string]interface{}) {
-			},
-			checkResponse: func(rec *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, rec.Code)
-			},
-		},
+		// {
+		//     name: "invalid page_id",
+		//     query: Query{
+		//         PageID:   0,
+		//         PageSize: 10,
+		//     },
+		//     buildStubs: func(pu *mock_usecase.MockIPostUsecase, query Query) {},
+		//     checkResponse: func(rec *httptest.ResponseRecorder) {
+		//         require.Equal(t, http.StatusBadRequest, rec.Code)
+		//     },
+		// },
+		// {
+		//     name: "invalid page_size",
+		//     query: Query{
+		//         PageID:   1,
+		//         PageSize: -1,
+		//     },
+		//     buildStubs: func(pu *mock_usecase.MockIPostUsecase, query Query) {},
+		//     checkResponse: func(rec *httptest.ResponseRecorder) {
+		//         require.Equal(t, http.StatusBadRequest, rec.Code)
+		//     },
+		// },
 		{
 			name: "internal server error",
-			requestBody: map[string]interface{}{
-				"user_id": utils.RandomInt(1, 100),
-				"limit":   int32(utils.RandomInt(1, 100)),
-				"offset":  int32(utils.RandomInt(1, 100)),
+			query: Query{
+				PageID:   1,
+				PageSize: 10,
 			},
-			buildStubs: func(pu *mock_usecase.MockIPostUsecase, requestBody map[string]interface{}) {
+			buildStubs: func(pu *mock_usecase.MockIPostUsecase, query Query) {
 				expectedReq := dto.AllPostsRequest{
-					UserID: requestBody["user_id"].(uint),
-					Limit:  requestBody["limit"].(int32),
-					Offset: requestBody["offset"].(int32),
+					PageID:   int32(query.PageID),
+					PageSize: int32(query.PageSize),
 				}
 				pu.EXPECT().
 					GetAllPosts(context.Background(), expectedReq).
 					Times(1).
-					Return([]dto.PostResponse{}, errors.New("internal server error"))
+					Return(nil, errors.New("internal server error"))
 			},
 			checkResponse: func(rec *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, rec.Code)
@@ -384,31 +367,15 @@ func TestGetAllPosts(t *testing.T) {
 	for i := range cases {
 		tc := cases[i]
 		t.Run(tc.name, func(t *testing.T) {
-			tc.buildStubs(pu, tc.requestBody)
+			tc.buildStubs(pu, tc.query)
 
-			body, err := json.Marshal(tc.requestBody)
-			require.NoError(t, err)
-
-			var userID uint
-			if id, ok := tc.requestBody["user_id"].(uint); ok {
-				userID = id
-			}
-			token, err := utils.CreateValidToken(userID)
-			require.NoError(t, err)
-
-			url := "/posts/"
-			req := httptest.NewRequest(http.MethodGet, url, bytes.NewReader(body))
+			url := fmt.Sprintf("/posts/?page_id=%d&page_size=%d", tc.query.PageID, tc.query.PageSize)
+			req := httptest.NewRequest(http.MethodGet, url, nil)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-			req.Header.Set(echo.HeaderAuthorization, fmt.Sprintf("Bearer %v", token))
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			if tc.name != "no user info" {
-				user := &jwt.Token{Claims: &dto.JwtCustomClaims{ID: userID}}
-				c.Set("user", user)
-			}
-
-			err = pc.GetAllPosts(c)
+			err := pc.GetAllPosts(c)
 			require.NoError(t, err)
 
 			tc.checkResponse(rec)

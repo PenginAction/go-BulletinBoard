@@ -59,9 +59,8 @@ func (pu *postUsecase) GetPostById(c context.Context, id uint) (dto.PostResponse
 
 func (pu *postUsecase) GetAllPosts(c context.Context, req dto.AllPostsRequest) ([]dto.PostResponse, error) {
 	arg := db.ListPostsParams{
-		UserID: req.UserID,
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
 	}
 	posts, err := pu.postRepository.ListPosts(c, arg)
 	if err != nil {
