@@ -20,6 +20,7 @@ type UpdatePostRequest struct {
 type PostResponse struct {
 	ID        uint      `json:"id"`
 	UserID    uint      `json:"user_id"`
+	UserStrID string    `json:"user_str_id"`
 	Text      string    `json:"text"`
 	CreatedAt time.Time `json:"created_at"`
 }

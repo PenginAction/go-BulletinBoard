@@ -29,6 +29,11 @@ func TestCreatePost(t *testing.T) {
 		Times(1).
 		Return(post, nil)
 
+	store.EXPECT().
+		GetUserStrIdById(gomock.Any(), gomock.Eq(post.UserID)).
+		Times(1).
+		Return(utils.RandomString(10), nil)
+
 	req := dto.CreatePostRequest{
 		UserID: post.UserID,
 		Text:   post.Text,
@@ -53,6 +58,11 @@ func TestGetPost(t *testing.T) {
 		GetPost(gomock.Any(), gomock.Eq(post.ID)).
 		Times(1).
 		Return(post, nil)
+
+	store.EXPECT().
+		GetUserStrIdById(gomock.Any(), gomock.Eq(post.UserID)).
+		Times(1).
+		Return(utils.RandomString(10), nil)
 
 	pu := NewPostUsecase(store)
 	res, err := pu.GetPostById(context.Background(), post.ID)
@@ -84,6 +94,11 @@ func TestGetAllPosts(t *testing.T) {
 		ListPosts(gomock.Any(), gomock.Eq(arg)).
 		Times(1).
 		Return(posts, nil)
+	
+	store.EXPECT().
+		GetUserStrIdById(gomock.Any(), gomock.Any()).
+		Times(n).
+		Return(utils.RandomString(10), nil)
 
 	req := dto.AllPostsRequest{
 		PageID:   1,
@@ -118,6 +133,11 @@ func TestUpdatePost(t *testing.T) {
 		UpdatePost(gomock.Any(), gomock.Eq(arg)).
 		Times(1).
 		Return(post, nil)
+
+	store.EXPECT().
+		GetUserStrIdById(gomock.Any(), gomock.Eq(post.UserID)).
+		Times(1).
+		Return(utils.RandomString(10), nil)
 
 	req := dto.UpdatePostRequest{
 		ID:   post.ID,
