@@ -68,30 +68,30 @@ func (pu *postUsecase) GetPostById(c context.Context, id uint) (dto.PostResponse
 }
 
 func (pu *postUsecase) GetAllPosts(c context.Context, req dto.AllPostsRequest) ([]dto.PostResponse, error) {
-    arg := db.ListPostsParams{
-        Limit:  req.PageSize,
-        Offset: (req.PageID - 1) * req.PageSize,
-    }
-    posts, err := pu.postRepository.ListPosts(c, arg)
-    if err != nil {
-        return []dto.PostResponse{}, err
-    }
-    resPosts := []dto.PostResponse{}
-    for _, v := range posts {
-        userStrId, err := pu.postRepository.GetUserStrIdById(c, v.UserID)
-        if err != nil {
-            return []dto.PostResponse{}, err
-        }
-        p := dto.PostResponse{
-            ID:        v.ID,
-            UserID:    v.UserID,
-            UserStrID: userStrId,
-            Text:      v.Text,
-            CreatedAt: v.CreatedAt,
-        }
-        resPosts = append(resPosts, p)
-    }
-    return resPosts, nil
+	arg := db.ListPostsParams{
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
+	}
+	posts, err := pu.postRepository.ListPosts(c, arg)
+	if err != nil {
+		return []dto.PostResponse{}, err
+	}
+	resPosts := []dto.PostResponse{}
+	for _, v := range posts {
+		userStrId, err := pu.postRepository.GetUserStrIdById(c, v.UserID)
+		if err != nil {
+			return []dto.PostResponse{}, err
+		}
+		p := dto.PostResponse{
+			ID:        v.ID,
+			UserID:    v.UserID,
+			UserStrID: userStrId,
+			Text:      v.Text,
+			CreatedAt: v.CreatedAt,
+		}
+		resPosts = append(resPosts, p)
+	}
+	return resPosts, nil
 }
 
 func (pu *postUsecase) UpdatePost(c context.Context, req dto.UpdatePostRequest) (dto.PostResponse, error) {

@@ -94,7 +94,7 @@ func TestGetAllPosts(t *testing.T) {
 		ListPosts(gomock.Any(), gomock.Eq(arg)).
 		Times(1).
 		Return(posts, nil)
-	
+
 	store.EXPECT().
 		GetUserStrIdById(gomock.Any(), gomock.Any()).
 		Times(n).
