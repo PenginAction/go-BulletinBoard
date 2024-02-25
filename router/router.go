@@ -15,7 +15,7 @@ import (
 func NewRouter(uc controller.IUserController, pc controller.IPostController, cfg config.Config) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"http://localhost:3000", cfg.FE_URL},
+		AllowOrigins:     []string{"http://localhost:3000", "https://nestjs-bulletin-board.vercel.app"},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowCredentials: true,
